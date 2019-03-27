@@ -63,7 +63,6 @@ void ARaycastGun::ValidateHit(const FHitResult & hitResult, FVector_NetQuantize 
 			(FMath::Abs(hitResult.Location.Y - hitBoxCenter.Y) < hitBoxExtents.Y) &&
 			(FMath::Abs(hitResult.Location.Z - hitBoxCenter.Z) < hitBoxExtents.Z))
 		{
-
 			//Object was hit. Damage it, apply force to it, show hit effects: 
 			if (hitResult.GetActor()->IsRootComponentMovable())
 			{

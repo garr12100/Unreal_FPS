@@ -3,6 +3,8 @@
 #include "Health.h"
 #include "GameFramework/Actor.h"
 #include "Net/UnrealNetwork.h"
+#include "DeathBehavior.h"
+#include "Shooter.h"
 
 
 // Sets default values for this component's properties
@@ -36,7 +38,15 @@ void UHealth::OnRep_CurrentHealth()
 
 void UHealth::Die()
 {
-	GetOwner()->Destroy();
+	if (UDeathBehavior* deathBehavior = GetOwner()->FindComponentByClass<UDeathBehavior>())
+	{
+		deathBehavior->HandleDeath();
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Health reached 0, but no DeathBehavior!")));
+
+	}
 }
 
 void UHealth::Damage(float amount)
