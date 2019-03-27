@@ -73,7 +73,7 @@ void ARaycastGun::ValidateHit(const FHitResult & hitResult, FVector_NetQuantize 
 			}
 			if (UHealth* health = hitResult.GetActor()->FindComponentByClass<UHealth>())
 			{
-				health->Damage(damage);
+				health->Damage(GetDamage(hitResult));
 			}
 		}
 	}

@@ -6,6 +6,22 @@
 #include "GameFramework/Actor.h"
 #include "Gun.generated.h"
 
+USTRUCT(BlueprintType)
+struct FBoneMultiplier
+{
+	GENERATED_BODY()
+
+public:
+
+	FBoneMultiplier();
+
+	UPROPERTY(EditAnywhere)
+		FName boneName;
+
+	UPROPERTY(EditAnywhere)
+		float damageMultiplier;
+};
+
 UCLASS()
 class SHOOTER_API AGun : public AActor
 {
@@ -37,6 +53,9 @@ protected:
 	/**Get location of gun's Muzzle socket. */
 	FORCEINLINE FVector GetMuzzleLocation() const { return FP_Gun->GetSocketLocation("Muzzle"); }
 
+	/** Calculate damage based on bone hit */
+	float GetDamage(const FHitResult& hit);
+
 private:
 	//Time Stamp of last Gun Fire
 	float lastShotTime = 0.f;
@@ -44,7 +63,7 @@ private:
 	//Is Trigger Pulled? 
 	bool triggerPulled = false;
 
-	/** Spawn Particle for bullet impact */ 
+	/** Spawn Particle for bullet impact */
 	void SpawnImpactParticle(const FHitResult& hitResult);
 
 	/** Spawn Bullet Trail/Beam Object*/
@@ -97,6 +116,10 @@ public:
 	/** How much Damage this gun does to targets */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
 		float damage = 5.f;
+
+	/** Multipliers for specific bones */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
+		TArray<FBoneMultiplier> boneMultipliers;
 
 	/** Required cooldown in between  */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)

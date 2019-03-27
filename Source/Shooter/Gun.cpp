@@ -12,6 +12,12 @@
 
 
 
+FBoneMultiplier::FBoneMultiplier()
+{
+	boneName = "";
+	damageMultiplier = 1.0f;
+}
+
 // Sets default values
 AGun::AGun()
 {
@@ -111,6 +117,21 @@ void AGun::SimulateHit(const FHitResult & hitResult)
 	{
 		MulticastSimulateHit(hitResult);
 	}
+}
+
+float AGun::GetDamage(const FHitResult& hit)
+{
+	float _damage = damage;
+	for (int i = 0; i < boneMultipliers.Num(); i++)
+	{
+		if (hit.BoneName == boneMultipliers[i].boneName)
+		{
+			_damage *= boneMultipliers[i].damageMultiplier;
+			break;
+		}
+	}
+
+	return _damage;
 }
 
 void AGun::MulticastSimulateHit_Implementation(const FHitResult & hitResult)

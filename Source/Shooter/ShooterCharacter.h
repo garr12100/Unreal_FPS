@@ -117,6 +117,10 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Gameplay)
 		class UInteractor* Interactor;
 
+	/** Component for Health - allows player to take damage */
+	UPROPERTY(VisibleDefaultsOnly, Category = Gameplay)
+		class UHealth* Health;
+
 	/** First Person AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		class UAnimMontage* FireAnimation1P;

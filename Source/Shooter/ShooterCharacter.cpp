@@ -62,6 +62,9 @@ AShooterCharacter::AShooterCharacter()
 	// Create an Interactor component
 	Interactor = CreateDefaultSubobject<UInteractor>(TEXT("Interactor"));
 
+	// Create an Interactor component
+	Health = CreateDefaultSubobject<UHealth>(TEXT("Health"));
+
 	OnDestroyed.AddDynamic(this, &AShooterCharacter::HandleDestroyed);
 
 }
