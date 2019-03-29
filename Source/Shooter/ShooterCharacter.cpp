@@ -19,11 +19,14 @@
 #include "Gun.h"
 #include "CharacterCameraController.h"
 #include "Net/UnrealNetwork.h"
+#include "GameFramework/PlayerState.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
 // AShooterCharacter
+
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -222,8 +225,6 @@ FVector AShooterCharacter::GetPawnViewLocation() const
 
 void AShooterCharacter::SetGun(AGun* newGun)
 {
-	if (!newGun)
-		return;
 	DetachGun();
 	gun = newGun;
 	AttachGun();
@@ -233,7 +234,7 @@ void AShooterCharacter::SetGunFromBlueprint(TSubclassOf<class AGun> newGunBP)
 {
 	if (!newGunBP || Role != ROLE_Authority)
 		return;
-	
+
 	if (UWorld* world = GetWorld())
 	{
 		AGun* newGun = world->SpawnActor<AGun>(newGunBP);
@@ -245,8 +246,7 @@ void AShooterCharacter::SetGunFromBlueprint(TSubclassOf<class AGun> newGunBP)
 
 void AShooterCharacter::OnRep_Gun()
 {
-	if (gun)
-		AttachGun();
+	AttachGun();
 }
 
 void AShooterCharacter::DetachGun()
@@ -260,6 +260,8 @@ void AShooterCharacter::DetachGun()
 
 void AShooterCharacter::AttachGun()
 {
+	if (!gun)
+		return;
 	gun->SetOwner(this);
 	bool local = IsLocallyControlled();
 	if (IsLocallyControlled())
@@ -302,6 +304,24 @@ bool AShooterCharacter::ServerFocus_Validate(bool _focused)
 	return true;
 }
 
+void AShooterCharacter::SetPlayerSpectate()
+{
+	APlayerState* playerState = this->GetPlayerState();
+	if (playerState)
+	{
+		AActor* owner = playerState->GetOwner();
+		APlayerController* pc = Cast<APlayerController>(owner);
+		if (pc)
+		{
+			Cast<APlayerController>(playerState->GetOwner())->ChangeState(NAME_Spectating);
+			playerState->bIsSpectator = true;
+			playerState->bOnlySpectator = true;
+			if (pc->GetSpectatorPawn())
+				pc->GetSpectatorPawn()->SetActorLocationAndRotation(this->GetActorLocation(), this->GetActorRotation());
+		}
+	}
+}
+
 void AShooterCharacter::Unfocus()
 {
 	if (Role < ROLE_Authority)
@@ -317,9 +337,36 @@ bool AShooterCharacter::IsFocused() const
 	return Focused;
 }
 
+void AShooterCharacter::SetStateSpectator()
+{
+	if (Role == ROLE_Authority)
+	{
+		MulticastSetPlayerSpectate();
+	}
+}
+
+void AShooterCharacter::SetStatePlayer()
+{
+	APlayerState* playerState = GetPlayerState();
+	Cast<APlayerController>(playerState->GetOwner())->ChangeState(NAME_Playing);
+	playerState->bIsSpectator = false;
+	playerState->bOnlySpectator = false;
+}
+
+void AShooterCharacter::MulticastSetPlayerSpectate_Implementation()
+{
+	SetPlayerSpectate();
+}
+
+
 void AShooterCharacter::SetPaused(bool on)
 {
 	Paused = on;
 	OnStopFire();
 	Unfocus();
+}
+
+USkeletalMeshComponent* AShooterCharacter::GetMesh3P() const
+{
+	return Mesh3P;
 }

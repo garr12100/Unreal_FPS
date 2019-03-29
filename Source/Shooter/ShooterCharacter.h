@@ -100,6 +100,14 @@ protected:
 	virtual void ServerFocus_Implementation(bool _focused);
 	virtual bool ServerFocus_Validate(bool _focused);
 
+	/** Set Player Spectate */
+	void SetPlayerSpectate();
+
+	/**Client-side functions for Spectate/Play */
+	UFUNCTION(NetMulticast, Reliable)
+		void MulticastSetPlayerSpectate();
+	virtual void MulticastSetPlayerSpectate_Implementation();
+
 public:
 	AShooterCharacter();
 
@@ -145,20 +153,32 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetPaused(bool on);
 
-	/* Getter for Camera Component */
+	/**Is this character paused? Will prevent input from working. */
+	UFUNCTION(BlueprintCallable)
+		class USkeletalMeshComponent* GetMesh3P() const;
+
+	/** Getter for Camera Component */
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	virtual FVector GetPawnViewLocation() const override;
 
-	/* Trigger fire animation based on 1st or 3rd person model */
+	/** Trigger fire animation based on 1st or 3rd person model */
 	void PlayFireAnimation();
-	/* Equip a new gun */
+
+	/** Equip a new gun */
 	void SetGun(class AGun* newGun);
-	/* Equip a new gun by instantiating it from a blueprint */
+
+	/** Equip a new gun by instantiating it from a blueprint */
 	void SetGunFromBlueprint(TSubclassOf<class AGun> newGunBP);
-	/* /Getter for Focused */
+
+	/** Getter for Focused */
 	bool IsFocused() const;
 
+	/** Set Player to Spectator */
+	void SetStateSpectator();
+
+	/** Set Player to Playing */
+	void SetStatePlayer();
 
 };
 
