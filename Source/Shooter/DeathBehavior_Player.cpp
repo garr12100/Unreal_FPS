@@ -5,7 +5,8 @@
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Classes/Animation/SkeletalMeshActor.h"
+#include "RagdollBase.h"
+#include "Engine/SkeletalMesh.h"
 //#include "Classes/Animation/.h"
 
 void UDeathBehavior_Player::HandleDeath()
@@ -17,9 +18,23 @@ void UDeathBehavior_Player::HandleDeath()
 			character->SetStateSpectator();
 			character->SetGun(NULL);
 			SpawnRagdoll(character->GetMesh3P());
-			character->SetLifeSpan(.001f);
+			character->SetLifeSpan(.075f);
 		}
 	}
+	else
+	{
+		HandleDeathServer();
+	}
+}
+
+void UDeathBehavior_Player::HandleDeathServer_Implementation()
+{
+	HandleDeath();
+}
+
+bool UDeathBehavior_Player::HandleDeathServer_Validate()
+{
+	return true;
 }
 
 void UDeathBehavior_Player::SpawnRagdoll(USkeletalMeshComponent* mesh3P)
@@ -28,9 +43,23 @@ void UDeathBehavior_Player::SpawnRagdoll(USkeletalMeshComponent* mesh3P)
 	{
 		if (mesh3P)
 		{
-			ASkeletalMeshActor* ragdoll = GetWorld()->SpawnActor<ASkeletalMeshActor>(Ragdoll_BP, mesh3P->GetComponentLocation(), mesh3P->GetComponentRotation());
-			FPoseSnapshot pose;
-			mesh3P->SnapshotPose(pose);
+			ARagdollBase* ragdoll = GetWorld()->SpawnActor<ARagdollBase>(Ragdoll_BP, mesh3P->GetComponentLocation(), mesh3P->GetComponentRotation());
+			ragdoll->SetSkeletalMesh(mesh3P->SkeletalMesh);
+
+			/*if (GetOwner()->Role == ROLE_Authority)
+			{
+				MulticastSetRagdollMesh(ragdoll, mesh3P->SkeletalMesh);
+			}*/
+			//FPoseSnapshot pose;
+			//mesh3P->SnapshotPose(pose);
 		}
 	}
 }
+
+//void UDeathBehavior_Player::MulticastSetRagdollMesh_Implementation(ASkeletalMeshActor * ragdoll, USkeletalMesh * newMesh)
+//{
+//	if(ragdoll && newMesh)
+//		ragdoll->GetSkeletalMeshComponent()->SetSkeletalMesh(newMesh);
+//}
+
+

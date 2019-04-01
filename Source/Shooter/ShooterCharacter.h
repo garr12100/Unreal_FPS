@@ -32,6 +32,8 @@ private:
 	UFUNCTION()
 		void HandleDestroyed(AActor* actor);
 
+	void SetDefaultGun();
+
 
 protected:
 

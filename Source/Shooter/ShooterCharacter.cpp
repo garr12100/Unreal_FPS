@@ -96,10 +96,19 @@ void AShooterCharacter::BeginPlay()
 
 	CameraControllerComponent->Camera = FirstPersonCameraComponent;
 
-	SetGunFromBlueprint(defaultGun_BP);
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AShooterCharacter::SetDefaultGun, 0.01f, false);
+
+	//SetGunFromBlueprint(defaultGun_BP);
 	//SetGun(gun);
 
 	defaultSpeed = GetCharacterMovement()->MaxWalkSpeed;
+
+}
+
+void AShooterCharacter::SetDefaultGun()
+{
+	SetGunFromBlueprint(defaultGun_BP);
 
 }
 
@@ -315,7 +324,7 @@ void AShooterCharacter::SetPlayerSpectate()
 		{
 			Cast<APlayerController>(playerState->GetOwner())->ChangeState(NAME_Spectating);
 			playerState->bIsSpectator = true;
-			playerState->bOnlySpectator = true;
+			//playerState->bOnlySpectator = true;
 			if (pc->GetSpectatorPawn())
 				pc->GetSpectatorPawn()->SetActorLocationAndRotation(this->GetActorLocation(), this->GetActorRotation());
 		}
