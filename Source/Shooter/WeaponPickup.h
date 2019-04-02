@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include "Interactable.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WeaponPickup.generated.h"
 
 UCLASS()
-class SHOOTER_API AWeaponPickup : public AActor
+class SHOOTER_API AWeaponPickup : public AInteractable
 {
 
 	GENERATED_BODY()
@@ -50,5 +51,7 @@ public:
 
 	/** Spawn an actual gun from this Pickup. */
 		void SpawnGun(APawn* pawn);
+
+
 
 };

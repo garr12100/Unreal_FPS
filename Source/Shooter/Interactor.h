@@ -16,20 +16,28 @@ public:
 	// Sets default values for this component's properties
 	UInteractor();
 
+	//void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	/** Actor being interacted with. */
-	UPROPERTY()
-	AActor* interactingWith;
+	//UPROPERTY(Replicated)
+	class AInteractable* interactingWith;
 
 	/** Owning Character */
 	UPROPERTY()
 		class AShooterCharacter* character;
 
 	/** Set what this interactor is interacting with. */
-	void SetInteractingWith(AActor* _interactWith);
+	void SetInteractingWith(class AInteractable* _interactWith);
 
 	/** Perform interaction with various types of objects. */
 	UFUNCTION(BlueprintCallable)
 		void Interact();
+
+
+protected: 
+
+	virtual void BeginPlay() override;
+
 
 private:
 

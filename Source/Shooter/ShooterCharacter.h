@@ -182,5 +182,22 @@ public:
 	/** Set Player to Playing */
 	void SetStatePlayer();
 
+	/** Event for overlapping with Interactable object */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnInteractable"))
+		void OnInteractable(const FText& interactionText);
+
+	/** Event for end overlapping with Interactable object */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnInteractableNull"))
+		void OnInteractableNull();
+
+	/** Event for becoming Spectator */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnSpectateStart"))
+		void OnSpectateStart();
+
+	///** Event for overlapping with Interactable object */
+	//UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnSpectateStart"))
+	//	void OnSpectateStart();
+
+
 };
 

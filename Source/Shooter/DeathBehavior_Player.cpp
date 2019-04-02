@@ -46,20 +46,7 @@ void UDeathBehavior_Player::SpawnRagdoll(USkeletalMeshComponent* mesh3P)
 			ARagdollBase* ragdoll = GetWorld()->SpawnActor<ARagdollBase>(Ragdoll_BP, mesh3P->GetComponentLocation(), mesh3P->GetComponentRotation());
 			ragdoll->SetSkeletalMesh(mesh3P->SkeletalMesh);
 
-			/*if (GetOwner()->Role == ROLE_Authority)
-			{
-				MulticastSetRagdollMesh(ragdoll, mesh3P->SkeletalMesh);
-			}*/
-			//FPoseSnapshot pose;
-			//mesh3P->SnapshotPose(pose);
 		}
 	}
 }
-
-//void UDeathBehavior_Player::MulticastSetRagdollMesh_Implementation(ASkeletalMeshActor * ragdoll, USkeletalMesh * newMesh)
-//{
-//	if(ragdoll && newMesh)
-//		ragdoll->GetSkeletalMeshComponent()->SetSkeletalMesh(newMesh);
-//}
-
 

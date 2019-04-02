@@ -40,7 +40,7 @@ void AWeaponPickup::OnOverlapBegin(AActor * overlappedActor, AActor * otherActor
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Enter")));
 	if(UInteractor* interactor = otherActor->FindComponentByClass<UInteractor>())
 	{
-		interactor->interactingWith = this;
+		interactor->SetInteractingWith(this);
 	}
 
 }
@@ -51,7 +51,7 @@ void AWeaponPickup::OnOverlapEnd(AActor * overlappedActor, AActor * otherActor)
 	if (UInteractor* interactor = otherActor->FindComponentByClass<UInteractor>())
 	{
 		if(interactor->interactingWith == this)
-			interactor->interactingWith = nullptr;
+			interactor->SetInteractingWith(nullptr);
 	}
 }
 

@@ -96,11 +96,9 @@ void AShooterCharacter::BeginPlay()
 
 	CameraControllerComponent->Camera = FirstPersonCameraComponent;
 
+	//Set gun initially using Timer - seems to be an issue with Server on respawn.
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AShooterCharacter::SetDefaultGun, 0.01f, false);
-
-	//SetGunFromBlueprint(defaultGun_BP);
-	//SetGun(gun);
 
 	defaultSpeed = GetCharacterMovement()->MaxWalkSpeed;
 
@@ -322,6 +320,7 @@ void AShooterCharacter::SetPlayerSpectate()
 		APlayerController* pc = Cast<APlayerController>(owner);
 		if (pc)
 		{
+			OnSpectateStart();
 			Cast<APlayerController>(playerState->GetOwner())->ChangeState(NAME_Spectating);
 			playerState->bIsSpectator = true;
 			//playerState->bOnlySpectator = true;
