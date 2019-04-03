@@ -8,6 +8,7 @@ public class ShooterTarget : TargetRules
 	public ShooterTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		ExtraModuleNames.Add("Shooter");
+        bUsesSteam = true;
+        ExtraModuleNames.Add("Shooter");
 	}
 }
